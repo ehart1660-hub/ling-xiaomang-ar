@@ -16,7 +16,7 @@
 
   const scene = document.createElement('a-scene');
   scene.id = 'ar-scene';
-  scene.setAttribute('mindar-image', 'imageTargetSrc: ./assets/target.mind; autoStart: false; maxTrack: 1; filterMinCF: 0.001; filterBeta: 45; warmupTolerance: 5; missTolerance: 5; uiScanning: no; uiError: no; uiLoading: no;');
+  scene.setAttribute('mindar-image', 'imageTargetSrc: ./assets/target.mind; autoStart: true; maxTrack: 1; filterMinCF: 0.001; filterBeta: 45; warmupTolerance: 5; missTolerance: 5; uiScanning: no; uiError: no;');
   scene.setAttribute('embedded', '');
   scene.setAttribute('renderer', 'colorManagement: true; antialias: true; alpha: true; physicallyCorrectLights: false');
   scene.setAttribute('vr-mode-ui', 'enabled: false');
@@ -45,63 +45,6 @@
   target.setAttribute('mindar-image-target','targetIndex: 0');
   scene.appendChild(target);
   $('app').prepend(scene);
-  let arStarted = false;
-  const startPanel = $('start-panel');
-  const startButton = $('start-ar');
-  const startStatus = $('start-status');
-
-  async function startAR() {
-    if (arStarted) return;
-    startButton.disabled = true;
-    startButton.textContent = '正在开启相机…';
-    startStatus.textContent = '正在请求相机权限，请稍候。';
-
-    if (!window.isSecureContext) {
-      startStatus.textContent = '当前页面不是安全 HTTPS 环境，浏览器不会允许相机。';
-      startButton.disabled = false;
-      startButton.textContent = '重新尝试';
-      return;
-    }
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      startStatus.textContent = '当前内置浏览器不支持网页 AR 相机。请点右上角菜单，选择“在系统浏览器中打开”。';
-      startButton.disabled = false;
-      startButton.textContent = '重新尝试';
-      return;
-    }
-
-    try {
-      // Preflight permission from a direct user gesture. Stop immediately;
-      // MindAR will request the camera again for its own video pipeline.
-      const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});
-      stream.getTracks().forEach(track => track.stop());
-
-      const system = scene.systems && scene.systems['mindar-image-system'];
-      if (!system || typeof system.start !== 'function') {
-        throw new Error('AR engine is not ready');
-      }
-      startStatus.textContent = '相机已允许，正在载入识别模型…';
-      await system.start();
-      arStarted = true;
-      startPanel.hidden = true;
-      $('scan-tip').hidden = false;
-      $('scan-tip').textContent = '请把完整展板放入镜头';
-    } catch (err) {
-      console.error(err);
-      const name = err && err.name ? err.name : '';
-      if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
-        startStatus.textContent = '相机权限被拒绝。请在浏览器网站权限里允许相机后重试。';
-      } else if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
-        startStatus.textContent = '没有检测到可用相机。';
-      } else {
-        startStatus.textContent = '相机启动失败。若你在微信/百度等内置浏览器，请选择“在系统浏览器中打开”后再试。';
-      }
-      startButton.disabled = false;
-      startButton.textContent = '重新开启 AR';
-    }
-  }
-
-  startButton.addEventListener('click', startAR);
-
 
   function plane(name, width, height, position, extra={}) {
     const el = document.createElement('a-plane');
@@ -227,10 +170,8 @@
   $('music').addEventListener('click',()=>setMusic(!musicOn));
 
   scene.addEventListener('arError',()=>{
-    startPanel.hidden = false;
-    startButton.disabled = false;
-    startButton.textContent = '重新开启 AR';
-    startStatus.textContent = 'AR 相机启动失败。请检查相机权限；如果在微信/百度等内置浏览器，请改用系统浏览器打开。';
+    $('error').textContent='相机未能启动。请允许相机权限；如果扫码应用不支持相机，请在手机浏览器中打开此页面。';
+    $('error').hidden=false;
   });
 
   target.addEventListener('targetFound',()=>{
