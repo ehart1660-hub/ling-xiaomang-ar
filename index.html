@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#173b79">
+  <title>凌小芒两岁生日 · AR 成长故事</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main id="app">
+    <div id="scan-tip" class="scan-tip">允许相机后，请把完整展板放入镜头</div>
+    <div id="topbar" class="topbar"><span>凌小芒 · 2 岁生日</span><button id="music" type="button" aria-pressed="false">开启音乐</button></div>
+    <div id="chapters" class="chapters" aria-label="成长故事节点"></div>
+    <dialog id="story" class="story"><button id="close-story" type="button" aria-label="关闭故事">×</button><img id="story-image" alt=""><div id="story-copy" class="story-copy" hidden><h2 id="story-heading"></h2><p id="story-date"></p><p id="story-body"></p></div><nav><button id="prev-story" type="button">上一段</button><button id="read-story" type="button">看大字</button><span id="story-progress"></span><button id="next-story" type="button">下一段</button></nav></dialog>
+    <div id="error" class="error" hidden></div>
+  </main>
+  <audio id="lion-music" src="./assets/11_lion_dance_cc0.mp3" loop preload="none"></audio>
+  <script src="./aframe.min.js"></script>
+  <script src="./mindar-image-aframe.prod.js"></script>
+  <script src="./app.js" defer></script>
+</body>
+</html>
