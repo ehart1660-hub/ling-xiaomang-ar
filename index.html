@@ -9,7 +9,15 @@
 </head>
 <body>
   <main id="app">
-    <div id="scan-tip" class="scan-tip">允许相机后，请把完整展板放入镜头</div>
+    <section id="start-panel" class="start-panel" aria-live="polite">
+      <div class="start-card">
+        <h1>凌小芒 · 两岁生日 AR</h1>
+        <p>点击下方按钮后，浏览器会请求相机权限。允许后，把完整展板放入镜头。</p>
+        <button id="start-ar" type="button">开启 AR 相机</button>
+        <p id="start-status" class="start-status">建议使用 Safari、Chrome 或系统浏览器打开。</p>
+      </div>
+    </section>
+    <div id="scan-tip" class="scan-tip" hidden>允许相机后，请把完整展板放入镜头</div>
     <div id="topbar" class="topbar"><span>凌小芒 · 2 岁生日</span><button id="music" type="button" aria-pressed="false">开启音乐</button></div>
     <div id="chapters" class="chapters" aria-label="成长故事节点"></div>
     <dialog id="story" class="story"><button id="close-story" type="button" aria-label="关闭故事">×</button><img id="story-image" alt=""><div id="story-copy" class="story-copy" hidden><h2 id="story-heading"></h2><p id="story-date"></p><p id="story-body"></p></div><nav><button id="prev-story" type="button">上一段</button><button id="read-story" type="button">看大字</button><span id="story-progress"></span><button id="next-story" type="button">下一段</button></nav></dialog>
